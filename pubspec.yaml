@@ -39,6 +39,8 @@ dependencies:
     sdk: flutter
   intl: any
   sqflite: ^2.3.0
+  loading_animation_widget: ^1.2.0+4
+  dropdown_button2: ^2.3.8
 
 dev_dependencies:
   flutter_test:

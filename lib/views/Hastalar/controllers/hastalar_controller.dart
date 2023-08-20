@@ -1,3 +1,4 @@
+import 'package:asi_takvimi/constants/snack_bars.dart';
 import 'package:asi_takvimi/models/hasta.dart';
 import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
@@ -6,11 +7,16 @@ class HastalarController extends GetxController {
   @override
   void onReady() async {
     await openDb('asi_takvimi.db');
-    hastalar.value = await getHastalar();
+    getHastalar();
     super.onReady();
   }
 
   late Database db;
+
+  var hastaInsertIsLoading = false.obs;
+  var hastaUpdateIsLoading = false.obs;
+  var hastaDeleteIsLoading = false.obs;
+  var hastaListIsLoading = false.obs;
 
   RxList<Hasta> hastalar = <Hasta>[].obs;
 
@@ -21,16 +27,27 @@ class HastalarController extends GetxController {
         create table hastalar ( 
           id integer primary key autoincrement, 
           adSoyad text not null,
+          telefon text not null,
           dogumTarihi text not null,
+          tc text not null,
           konteynerKentIsim text not null,
-          konteynerKentNumarasi integer not null)
+          konteynerKentNumarasi text not null)
         ''');
     });
   }
 
-  Future<Hasta> insertHasta(Hasta hasta) async {
-    hasta.id = await db.insert('hastalar', hasta.toMap());
-    return hasta;
+  Future insertHasta(Hasta hasta) async {
+    try {
+      hastaInsertIsLoading.value = true;
+      hasta.id = await db.insert('hastalar', hasta.toMap());
+      hastaInsertIsLoading.value = false;
+      Get.until((route) => Get.currentRoute == '/');
+      MySnackBars.showSuccessSnackBar('Başarılı', 'Hasta eklendi');
+      getHastalar();
+    } catch (e) {
+      MySnackBars.showErrorSnackBar('Hata', e.toString());
+      hastaInsertIsLoading.value = false;
+    }
   }
 
   Future<Hasta?> getHasta(int id) async {
@@ -38,7 +55,9 @@ class HastalarController extends GetxController {
         columns: [
           'id',
           'adSoyad',
+          'telefon',
           'dogumTarihi',
+          'tc',
           'konteynerKentIsim',
           'konteynerKentNumarasi'
         ],
@@ -50,27 +69,52 @@ class HastalarController extends GetxController {
     return null;
   }
 
-  Future<List<Hasta>> getHastalar() async {
+  Future getHastalar() async {
+    hastaListIsLoading.value = true;
     List<Map<String, Object?>> maps = await db.query('hastalar', columns: [
       'id',
       'adSoyad',
+      'telefon',
       'dogumTarihi',
+      'tc',
       'konteynerKentIsim',
       'konteynerKentNumarasi'
     ]);
+    hastaListIsLoading.value = false;
     if (maps.isNotEmpty) {
-      return maps.map((e) => Hasta.fromMap(e)).toList();
+      hastalar.value = maps.map((e) => Hasta.fromMap(e)).toList();
+    } else {
+      hastalar.clear();
     }
-    return [];
   }
 
-  Future<int> deleteHasta(int id) async {
-    return await db.delete('hastalar', where: 'id = ?', whereArgs: [id]);
+  Future deleteHasta(int id) async {
+    try {
+      hastaDeleteIsLoading.value = true;
+      await db.delete('hastalar', where: 'id = ?', whereArgs: [id]);
+      MySnackBars.showSuccessSnackBar('Başarılı', 'Hasta silindi');
+      getHastalar();
+      hastaDeleteIsLoading.value = false;
+      Get.until((route) => Get.currentRoute == '/');
+    } catch (e) {
+      hastaDeleteIsLoading.value = false;
+      MySnackBars.showErrorSnackBar('Hata', e.toString());
+    }
   }
 
-  Future<int> updateHasta(Hasta hasta) async {
-    return await db.update('hastalar', hasta.toMap(),
-        where: 'id = ?', whereArgs: [hasta.id]);
+  Future updateHasta(Hasta hasta) async {
+    try {
+      hastaUpdateIsLoading.value = true;
+      await db.update('hastalar', hasta.toMap(),
+          where: 'id = ?', whereArgs: [hasta.id]);
+      MySnackBars.showSuccessSnackBar('Başarılı', 'Hasta güncellendi');
+      getHastalar();
+      hastaUpdateIsLoading.value = false;
+      Get.until((route) => Get.currentRoute == '/');
+    } catch (e) {
+      MySnackBars.showErrorSnackBar('Hata', e.toString());
+      hastaUpdateIsLoading.value = false;
+    }
   }
 
   Future close() async => db.close();

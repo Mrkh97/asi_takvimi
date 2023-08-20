@@ -8,9 +8,18 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../models/hasta.dart';
 
-class HastaEkle extends StatelessWidget {
-  HastaEkle({super.key});
+class HastaGuncelle extends StatelessWidget {
+  HastaGuncelle({super.key, required this.hasta}) {
+    adSoyadController.text = hasta.adSoyad;
+    telefonController.text = hasta.telefon;
+    tcController.text = hasta.tc;
+    konteynerKentIsimController.text = hasta.konteynerKentIsim;
+    konteynerKentNumaraController.text = hasta.konteynerKentNumarasi;
+    dogumTarihi.value = hasta.dogumTarihi;
+  }
   final HastalarController hc = Get.find();
+
+  final Hasta hasta;
 
   final TextEditingController adSoyadController = TextEditingController();
   final TextEditingController telefonController = TextEditingController();
@@ -55,7 +64,8 @@ class HastaEkle extends StatelessWidget {
         foregroundColor: MyAppColors.baseColor,
         onPressed: () {
           if (validateForm()) {
-            hc.insertHasta(Hasta(
+            hc.updateHasta(Hasta(
+                id: hasta.id,
                 adSoyad: adSoyadController.text,
                 telefon: telefonController.text,
                 dogumTarihi: dogumTarihi.value,
@@ -64,14 +74,14 @@ class HastaEkle extends StatelessWidget {
                 konteynerKentNumarasi: konteynerKentNumaraController.text));
           }
         },
-        label: const Text('Ekle'),
-        icon: Obx(() => hc.hastaInsertIsLoading()
+        label: const Text('Güncelle'),
+        icon: Obx(() => hc.hastaUpdateIsLoading()
             ? LoadingAnimationWidget.discreteCircle(
                 color: MyAppColors.baseColor, size: 20)
-            : const Icon(Icons.add)),
+            : const Icon(Icons.edit)),
       ),
       appBar: AppBar(
-        title: const Text('Hasta Ekle'),
+        title: const Text('Hasta Güncelle'),
       ),
       body: SingleChildScrollView(
           child: Column(

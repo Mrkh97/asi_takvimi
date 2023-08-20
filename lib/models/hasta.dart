@@ -1,17 +1,19 @@
 class Hasta {
-  int id;
+  int? id;
   String adSoyad;
   String telefon;
   DateTime dogumTarihi;
+  String tc;
   String konteynerKentIsim;
-  int konteynerKentNumarasi;
+  String konteynerKentNumarasi;
 
   Map<String, Object?> toMap() {
     var map = <String, Object?>{
-      'id': id,
+      if (id != null) 'id': id,
       'adSoyad': adSoyad,
       'telefon': telefon,
-      'dogumTarihi': dogumTarihi,
+      'dogumTarihi': dogumTarihi.toIso8601String(),
+      'tc': tc,
       'konteynerKentIsim': konteynerKentIsim,
       'konteynerKentNumarasi': konteynerKentNumarasi,
     };
@@ -19,10 +21,11 @@ class Hasta {
   }
 
   Hasta(
-      {required this.id,
+      {this.id,
       required this.adSoyad,
       required this.telefon,
       required this.dogumTarihi,
+      required this.tc,
       required this.konteynerKentIsim,
       required this.konteynerKentNumarasi});
 
@@ -31,7 +34,8 @@ class Hasta {
         adSoyad: map['adSoyad'] as String,
         telefon: map['telefon'] as String,
         dogumTarihi: DateTime.parse(map['dogumTarihi'] as String),
+        tc: map['tc'] as String,
         konteynerKentIsim: map['konteynerKentIsim'] as String,
-        konteynerKentNumarasi: map['konteynerKentNumarasi'] as int,
+        konteynerKentNumarasi: map['konteynerKentNumarasi'] as String,
       );
 }
