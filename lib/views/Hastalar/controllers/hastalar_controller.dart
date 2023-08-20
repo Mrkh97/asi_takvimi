@@ -8,6 +8,133 @@ class HastalarController extends GetxController {
   void onReady() async {
     await openDb('asi_takvimi.db');
     getHastalar();
+    filterWorker = ever(selectedFilterId, (callback) {
+      var today = DateTime.now();
+      if (selectedFilterId.value == -1) {
+        filteredHastalar.value = hastalar;
+      }
+      if (selectedFilterId.value == 0) {
+        //     "0":"0 aylık doğumda",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year, element.dogumTarihi.month,
+                      element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year, element.dogumTarihi.month + 1,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 1) {
+        //     "1":"1 Ayın Sonunda",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year,
+                      element.dogumTarihi.month + 1, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year, element.dogumTarihi.month + 2,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 2) {
+        //     "2":"2 Ayın Sonunda",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year,
+                      element.dogumTarihi.month + 2, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year, element.dogumTarihi.month + 3,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 3) {
+        //     "3":"4 Ayın Sonunda",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year,
+                      element.dogumTarihi.month + 3, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year, element.dogumTarihi.month + 5,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 4) {
+        //     "4":"6 Ayın Sonunda",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year,
+                      element.dogumTarihi.month + 5, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year, element.dogumTarihi.month + 7,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 5) {
+        //     "5":"9 Ayın Sonunda",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year,
+                      element.dogumTarihi.month + 7, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year, element.dogumTarihi.month + 10,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 6) {
+        //     "6":"12 Ayın Sonunda",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year,
+                      element.dogumTarihi.month + 10, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year, element.dogumTarihi.month + 13,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 7) {
+        //     "7":"18 Ayın Sonunda",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year,
+                      element.dogumTarihi.month + 13, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year, element.dogumTarihi.month + 19,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 8) {
+        //     "8":"24 Ayın Sonunda",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year,
+                      element.dogumTarihi.month + 19, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year, element.dogumTarihi.month + 25,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 9) {
+        //     "9":"4 Yaşında",
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year,
+                      element.dogumTarihi.month + 25, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year + 4, element.dogumTarihi.month,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+      if (selectedFilterId.value == 10) {
+        //     "10":"13 Yaşında"
+        filteredHastalar.value = hastalar.where((element) {
+          return DateTime(element.dogumTarihi.year + 4,
+                      element.dogumTarihi.month, element.dogumTarihi.day)
+                  .isBefore(today) &&
+              DateTime(element.dogumTarihi.year + 14, element.dogumTarihi.month,
+                      element.dogumTarihi.day - 1)
+                  .isAfter(today);
+        }).toList();
+      }
+    });
     super.onReady();
   }
 
@@ -18,7 +145,12 @@ class HastalarController extends GetxController {
   var hastaDeleteIsLoading = false.obs;
   var hastaListIsLoading = false.obs;
 
+  var selectedFilterId = (-1).obs;
+
   RxList<Hasta> hastalar = <Hasta>[].obs;
+  RxList<Hasta> filteredHastalar = <Hasta>[].obs;
+
+  late Worker filterWorker;
 
   Future openDb(String path) async {
     db = await openDatabase(path, version: 1,
@@ -83,6 +215,8 @@ class HastalarController extends GetxController {
     hastaListIsLoading.value = false;
     if (maps.isNotEmpty) {
       hastalar.value = maps.map((e) => Hasta.fromMap(e)).toList();
+      filteredHastalar.value = hastalar;
+      selectedFilterId.value = -1;
     } else {
       hastalar.clear();
     }

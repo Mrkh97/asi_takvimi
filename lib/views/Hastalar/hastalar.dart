@@ -2,6 +2,7 @@ import 'package:asi_takvimi/constants/app_colors.dart';
 import 'package:asi_takvimi/views/Hastalar/components/hasta_detay.dart';
 import 'package:asi_takvimi/views/Hastalar/components/hasta_ekle.dart';
 import 'package:asi_takvimi/views/Hastalar/controllers/hastalar_controller.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -25,6 +26,43 @@ class Hastalar extends StatelessWidget {
       ),
       appBar: AppBar(
         title: const Text('Hastalar'),
+        actions: [
+          Obx(
+            () => DropdownButton2(
+                value: hc.selectedFilterId(),
+                underline: Container(),
+                buttonStyleData: ButtonStyleData(
+                    height: 44,
+                    decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(8))),
+                dropdownStyleData: DropdownStyleData(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: MyAppColors.baseColor),
+                    elevation: 4),
+                items: const [
+                  DropdownMenuItem(value: -1, child: Text('Tumu')),
+                  DropdownMenuItem(value: 0, child: Text('0 aylık doğumda')),
+                  DropdownMenuItem(value: 1, child: Text('1 Ayın Sonunda')),
+                  DropdownMenuItem(value: 2, child: Text('2 Ayın Sonunda')),
+                  DropdownMenuItem(value: 3, child: Text('4 Ayın Sonunda')),
+                  DropdownMenuItem(value: 4, child: Text('6 Ayın Sonunda')),
+                  DropdownMenuItem(value: 5, child: Text('9 Ayın Sonunda')),
+                  DropdownMenuItem(value: 6, child: Text('12 Ayın Sonunda')),
+                  DropdownMenuItem(value: 7, child: Text('18 Ayın Sonunda')),
+                  DropdownMenuItem(value: 8, child: Text('24 Ayın Sonunda')),
+                  DropdownMenuItem(value: 9, child: Text('4 Yaşında')),
+                  DropdownMenuItem(value: 10, child: Text('13 Yaşında')),
+                ],
+                onChanged: (e) {
+                  hc.selectedFilterId(e);
+                }),
+          ),
+          const SizedBox(
+            width: 8,
+          )
+        ],
       ),
       body: Obx(() => ListView(
             children: [
@@ -49,9 +87,11 @@ class Hastalar extends StatelessWidget {
                     ),
                   ),
                 ),
-              ...hc.hastalar.map((hasta) => HastaCard(
-                    hasta: hasta,
-                  ))
+              ...hc.filteredHastalar.map(
+                (hasta) => HastaCard(
+                  hasta: hasta,
+                ),
+              ),
             ],
           )),
     );
