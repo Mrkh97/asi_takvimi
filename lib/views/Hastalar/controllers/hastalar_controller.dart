@@ -9,6 +9,7 @@ class HastalarController extends GetxController {
     await openDb('asi_takvimi.db');
     getHastalar();
     filterWorker = ever(selectedFilterId, (callback) {
+      hastaListIsLoading(true);
       var today = DateTime.now();
       if (selectedFilterId.value == -1) {
         filteredHastalar.value = hastalar;
@@ -135,6 +136,7 @@ class HastalarController extends GetxController {
         }).toList();
       }
     });
+    hastaListIsLoading(false);
     super.onReady();
   }
 
